@@ -1,0 +1,593 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>MegaTrio Ofertas - 3 por 1</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9; }
+    header { background:#ff6600; color:white; padding:20px; text-align:center; }
+    .banner { background:#ffe0b2; padding:40px; text-align:center; font-size:26px; font-weight:bold; }
+    .categoria { margin:40px auto; max-width:1200px; }
+    .categoria h2 { text-align:center; color:#333; margin-bottom:20px; }
+    .produtos { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:20px; padding:0 20px; }
+    .produto { border:1px solid #ddd; border-radius:10px; padding:15px; text-align:center; background:#fff; transition:0.3s; }
+    .produto:hover { transform:scale(1.03); box-shadow:0 0 10px rgba(0,0,0,0.1); }
+    .produto img { max-width:100%; border-radius:10px; }
+    .preco { color:green; font-size:18px; font-weight:bold; }
+    .btn { background:#ff6600; color:white; padding:10px 15px; text-decoration:none; border-radius:5px; display:inline-block; margin-top:10px; }
+    .btn:hover { background:#e65c00; }
+    .urgencia { background:#e63946; color:white; text-align:center; padding:10px; font-size:18px; font-weight:bold; }
+    footer { background:#333; color:white; padding:20px; text-align:center; margin-top:40px; }
+    .whatsapp-btn { position:fixed; bottom:20px; right:20px; background:#25d366; color:white; padding:15px 20px; border-radius:50px; font-size:18px; text-decoration:none; box-shadow:0 4px 10px rgba(0,0,0,0.2); transition:0.3s; z-index: 1000; }
+    .whatsapp-btn:hover { background:#1ebe57; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🔥 MegaTrio Ofertas - Leve 3, Pague 1 🔥</h1>
+</header>
+
+<div class="banner">
+  Aproveite HOJE: estoque limitado + entrega rápida 🚚
+</div>
+
+<div class="urgencia">
+  Oferta termina em: <span id="contador"></span>
+</div>
+
+<div id="produtos-container">
+  </div>
+
+<a href="https://wa.me/5521999999999?text=Oi!%20Quero%20saber%20mais%20sobre%20as%20ofertas%20MegaTrio" class="whatsapp-btn" target="_blank">💬 WhatsApp</a>
+
+<footer>
+  <p>© 2025 MegaTrio Ofertas | Compra 100% segura 🔒</p>
+</footer>
+
+<script>
+// JSON DOS 50 PRODUTOS (Dados Fictícios)
+const produtosData = [
+  {
+    "id": 1,
+    "nome": "Cápsula de Som Ômega",
+    "descricao": "Áudio imersivo e portátil com bateria de longa duração. Perfeito para viagens.",
+    "preco": "R$349,99",
+    "categoria": "Eletrônicos",
+    "estoque": 45,
+    "imagem": "https://dataforge.com/images/capsulasom_omega.jpg"
+  },
+  {
+    "id": 2,
+    "nome": "Vestido Floral 'Aurora'",
+    "descricao": "Tecido leve e caimento impecável. A estampa que ilumina qualquer dia.",
+    "preco": "R$189,50",
+    "categoria": "Moda",
+    "estoque": 78,
+    "imagem": "https://dataforge.com/images/vestido_aurora.jpg"
+  },
+  {
+    "id": 3,
+    "nome": "Kit de Potes Herméticos 'Zen'",
+    "descricao": "Mantenha seus alimentos frescos por mais tempo. Design minimalista e empilhável.",
+    "preco": "R$89,90",
+    "categoria": "Casa",
+    "estoque": 91,
+    "imagem": "https://dataforge.com/images/potes_zen.jpg"
+  },
+  {
+    "id": 4,
+    "nome": "Blocos de Construção 'Mega Tower'",
+    "descricao": "Incentive a criatividade com mais de 500 peças. Diversão garantida para todas as idades.",
+    "preco": "R$129,99",
+    "categoria": "Brinquedos",
+    "estoque": 22,
+    "imagem": "https://dataforge.com/images/blocos_megatower.jpg"
+  },
+  {
+    "id": 5,
+    "nome": "Sérum Facial Hialurônico 'Glow'",
+    "descricao": "Hidratação profunda e redução de linhas finas. O segredo para uma pele radiante.",
+    "preco": "R$155,00",
+    "categoria": "Beleza",
+    "estoque": 57,
+    "imagem": "https://dataforge.com/images/serum_glow.jpg"
+  },
+  {
+    "id": 6,
+    "nome": "Smartwatch Explorer X7",
+    "descricao": "Monitoramento completo de saúde e GPS integrado. Seu parceiro ideal de treino.",
+    "preco": "R$499,00",
+    "categoria": "Eletrônicos",
+    "estoque": 14,
+    "imagem": "https://dataforge.com/images/smartwatch_explorer.jpg"
+  },
+  {
+    "id": 7,
+    "nome": "Calça Jeans Slim Fit 'Gravity'",
+    "descricao": "Caimento moderno e tecido de alta elasticidade. Conforto e estilo sem igual.",
+    "preco": "R$210,90",
+    "categoria": "Moda",
+    "estoque": 68,
+    "imagem": "https://dataforge.com/images/jeans_gravity.jpg"
+  },
+  {
+    "id": 8,
+    "nome": "Cafeteira Programável 'Aroma Plus'",
+    "descricao": "Programe seu café para a hora que quiser. 12 xícaras de sabor puro.",
+    "preco": "R$299,99",
+    "categoria": "Casa",
+    "estoque": 33,
+    "imagem": "https://dataforge.com/images/cafeteira_aroma.jpg"
+  },
+  {
+    "id": 9,
+    "nome": "Boneca Articulada 'Princesa Estelar'",
+    "descricao": "Com acessórios brilhantes e 15 pontos de articulação. A favorita dos pequenos.",
+    "preco": "R$75,00",
+    "categoria": "Brinquedos",
+    "estoque": 85,
+    "imagem": "https://dataforge.com/images/boneca_estelar.jpg"
+  },
+  {
+    "id": 10,
+    "nome": "Paleta de Sombras 'Cores do Mar'",
+    "descricao": "12 cores vibrantes e altamente pigmentadas. Crie looks incríveis para qualquer ocasião.",
+    "preco": "R$59,90",
+    "categoria": "Beleza",
+    "estoque": 100,
+    "imagem": "https://dataforge.com/images/paleta_mar.jpg"
+  },
+  {
+    "id": 11,
+    "nome": "Mouse Sem Fio Ergonômico 'Wave'",
+    "descricao": "Design confortável para longas horas de uso. Conexão estável e rápida.",
+    "preco": "R$65,40",
+    "categoria": "Eletrônicos",
+    "estoque": 51,
+    "imagem": "https://dataforge.com/images/mouse_wave.jpg"
+  },
+  {
+    "id": 12,
+    "nome": "Jaqueta Corta-Vento 'Active'",
+    "descricao": "Leve, resistente à água e ideal para atividades ao ar livre. Estilo e proteção.",
+    "preco": "R$259,99",
+    "categoria": "Moda",
+    "estoque": 39,
+    "imagem": "https://dataforge.com/images/jaqueta_active.jpg"
+  },
+  {
+    "id": 13,
+    "nome": "Vaso Decorativo de Cerâmica 'Luna'",
+    "descricao": "Peça de design elegante com acabamento fosco. Destaque para sua sala.",
+    "preco": "R$45,50",
+    "categoria": "Casa",
+    "estoque": 72,
+    "imagem": "https://dataforge.com/images/vaso_luna.jpg"
+  },
+  {
+    "id": 14,
+    "nome": "Carro de Controle Remoto 'Turbo Racer'",
+    "descricao": "Alta velocidade e manobras radicais. Pneus off-road para todos os terrenos.",
+    "preco": "R$119,00",
+    "categoria": "Brinquedos",
+    "estoque": 18,
+    "imagem": "https://dataforge.com/images/carro_turbo.jpg"
+  },
+  {
+    "id": 15,
+    "nome": "Máscara Capilar de Abacate",
+    "descricao": "Nutrição intensa e brilho para cabelos secos e danificados. Resultado de salão em casa.",
+    "preco": "R$35,99",
+    "categoria": "Beleza",
+    "estoque": 95,
+    "imagem": "https://dataforge.com/images/mascara_abacate.jpg"
+  },
+  {
+    "id": 16,
+    "nome": "Fone de Ouvido Noise Cancelling Pro",
+    "descricao": "Cancele o ruído e mergulhe na sua música. Conforto e som cristalino.",
+    "preco": "R$420,00",
+    "categoria": "Eletrônicos",
+    "estoque": 28,
+    "imagem": "https://dataforge.com/images/fone_noisepro.jpg"
+  },
+  {
+    "id": 17,
+    "nome": "Tênis Casual 'Urban Light'",
+    "descricao": "Estilo urbano e sola leve. Perfeito para o dia a dia com máximo conforto.",
+    "preco": "R$175,90",
+    "categoria": "Moda",
+    "estoque": 48,
+    "imagem": "https://dataforge.com/images/tenis_urban.jpg"
+  },
+  {
+    "id": 18,
+    "nome": "Jogo de Cama King Microfibra",
+    "descricao": "Toque macio e sedoso. Noites de sono tranquilas e aconchegantes.",
+    "preco": "R$139,90",
+    "categoria": "Casa",
+    "estoque": 60,
+    "imagem": "https://dataforge.com/images/jogo_cama_king.jpg"
+  },
+  {
+    "id": 19,
+    "nome": "Massa de Modelar Colorida - 10 Cores",
+    "descricao": "Não tóxica e fácil de moldar. Ideal para estimular a coordenação motora.",
+    "preco": "R$25,99",
+    "categoria": "Brinquedos",
+    "estoque": 99,
+    "imagem": "https://dataforge.com/images/massa_modelar.jpg"
+  },
+  {
+    "id": 20,
+    "nome": "Esmalte Gel 'Diamante Negro'",
+    "descricao": "Brilho intenso e longa duração sem necessidade de cabine UV. Cor sofisticada.",
+    "preco": "R$19,90",
+    "categoria": "Beleza",
+    "estoque": 81,
+    "imagem": "https://dataforge.com/images/esmalte_diamante.jpg"
+  },
+  {
+    "id": 21,
+    "nome": "Teclado Mecânico RGB 'Spectra'",
+    "descricao": "Switches táteis de alta resposta e iluminação personalizável. Domine seus jogos.",
+    "preco": "R$289,50",
+    "categoria": "Eletrônicos",
+    "estoque": 30,
+    "imagem": "https://dataforge.com/images/teclado_spectra.jpg"
+  },
+  {
+    "id": 22,
+    "nome": "Bolsa Tiracolo de Couro 'Clássica'",
+    "descricao": "Design atemporal em couro legítimo. Espaço ideal para seus itens essenciais.",
+    "preco": "R$350,00",
+    "categoria": "Moda",
+    "estoque": 11,
+    "imagem": "https://dataforge.com/images/bolsa_classica.jpg"
+  },
+  {
+    "id": 23,
+    "nome": "Aspirador de Pó Vertical sem Fio 'PowerClean'",
+    "descricao": "Potência e praticidade em um só aparelho. Bateria de longa duração para a casa toda.",
+    "preco": "R$399,90",
+    "categoria": "Casa",
+    "estoque": 26,
+    "imagem": "https://dataforge.com/images/aspirador_power.jpg"
+  },
+  {
+    "id": 24,
+    "nome": "Pista de Corrida 'Loop Extremo'",
+    "descricao": "Montagem modular com loopings e curvas radicais. Adrenalina em alta velocidade.",
+    "preco": "R$85,00",
+    "categoria": "Brinquedos",
+    "estoque": 41,
+    "imagem": "https://dataforge.com/images/pista_loop.jpg"
+  },
+  {
+    "id": 25,
+    "nome": "Protetor Solar Facial FPS 70 'Defense'",
+    "descricao": "Toque seco e proteção UVA/UVB muito alta. Essencial para a rotina de cuidados.",
+    "preco": "R$69,99",
+    "categoria": "Beleza",
+    "estoque": 53,
+    "imagem": "https://dataforge.com/images/protetor_defense.jpg"
+  },
+  {
+    "id": 26,
+    "nome": "Tablet Slim 10 polegadas 'Connect'",
+    "descricao": "Tela Full HD e processador rápido. Ideal para estudo, trabalho e entretenimento.",
+    "preco": "R$450,00",
+    "categoria": "Eletrônicos",
+    "estoque": 19,
+    "imagem": "https://dataforge.com/images/tablet_connect.jpg"
+  },
+  {
+    "id": 27,
+    "nome": "Blusa de Tricô Gola Alta 'Outono'",
+    "descricao": "Maciez e conforto para os dias frios. Peça chave para um look elegante.",
+    "preco": "R$149,90",
+    "categoria": "Moda",
+    "estoque": 65,
+    "imagem": "https://dataforge.com/images/blusa_outono.jpg"
+  },
+  {
+    "id": 28,
+    "nome": "Conjunto de Panelas Antiaderentes 'Chef'",
+    "descricao": "Cozinhe sem grudar e limpe facilmente. 5 peças essenciais para sua cozinha.",
+    "preco": "R$320,50",
+    "categoria": "Casa",
+    "estoque": 35,
+    "imagem": "https://dataforge.com/images/panelas_chef.jpg"
+  },
+  {
+    "id": 29,
+    "nome": "Quebra-Cabeça 1000 Peças 'Paisagem'",
+    "descricao": "Desafio relaxante com uma imagem de tirar o fôlego. Perfeito para a família.",
+    "preco": "R$55,00",
+    "categoria": "Brinquedos",
+    "estoque": 77,
+    "imagem": "https://dataforge.com/images/quebra_cabeca_mil.jpg"
+  },
+  {
+    "id": 30,
+    "nome": "Shampoo Sólido de Alecrim",
+    "descricao": "Produto ecológico e com ingredientes naturais. Limpeza profunda e volume.",
+    "preco": "R$29,90",
+    "categoria": "Beleza",
+    "estoque": 93,
+    "imagem": "https://dataforge.com/images/shampoo_solido.jpg"
+  },
+  {
+    "id": 31,
+    "nome": "Webcam Full HD com Microfone",
+    "descricao": "Qualidade de imagem nítida para reuniões e transmissões ao vivo. Plug and Play.",
+    "preco": "R$115,99",
+    "categoria": "Eletrônicos",
+    "estoque": 50,
+    "imagem": "https://dataforge.com/images/webcam_fullhd.jpg"
+  },
+  {
+    "id": 32,
+    "nome": "Cinto de Couro Dupla Face",
+    "descricao": "Versatilidade e elegância em um só acessório. Gire a fivela e mude a cor.",
+    "preco": "R$89,90",
+    "categoria": "Moda",
+    "estoque": 62,
+    "imagem": "https://dataforge.com/images/cinto_duplaface.jpg"
+  },
+  {
+    "id": 33,
+    "nome": "Luminária de Mesa LED Flexível",
+    "descricao": "Iluminação ajustável com 3 níveis de brilho. Ideal para leitura e trabalho.",
+    "preco": "R$79,90",
+    "categoria": "Casa",
+    "estoque": 44,
+    "imagem": "https://dataforge.com/images/luminaria_flex.jpg"
+  },
+  {
+    "id": 34,
+    "nome": "Kit Médico Infantil 'Doutor Feliz'",
+    "descricao": "Estimule a imaginação com instrumentos seguros e coloridos. + de 10 peças.",
+    "preco": "R$45,00",
+    "categoria": "Brinquedos",
+    "estoque": 70,
+    "imagem": "https://dataforge.com/images/kit_medico.jpg"
+  },
+  {
+    "id": 35,
+    "nome": "Removedor de Maquiagem Bifásico",
+    "descricao": "Remove maquiagem à prova d'água sem agredir a pele. Suavidade e eficácia.",
+    "preco": "R$39,99",
+    "categoria": "Beleza",
+    "estoque": 88,
+    "imagem": "https://dataforge.com/images/removedor_bifasico.jpg"
+  },
+  {
+    "id": 36,
+    "nome": "Mini Projetor Portátil 'Cinema Box'",
+    "descricao": "Transforme qualquer parede em uma tela de cinema. Conexão HDMI e USB.",
+    "preco": "R$479,00",
+    "categoria": "Eletrônicos",
+    "estoque": 16,
+    "imagem": "https://dataforge.com/images/projetor_cinema.jpg"
+  },
+  {
+    "id": 37,
+    "nome": "Óculos de Sol Polarizado 'Aviador'",
+    "descricao": "Proteção UV400 e lentes polarizadas. Estilo clássico e máxima proteção ocular.",
+    "preco": "R$199,50",
+    "categoria": "Moda",
+    "estoque": 31,
+    "imagem": "https://dataforge.com/images/oculos_aviador.jpg"
+  },
+  {
+    "id": 38,
+    "nome": "Cesto Organizador Dobrável 'Multiuso'",
+    "descricao": "Ideal para brinquedos, roupas ou objetos. Mantenha a casa sempre arrumada.",
+    "preco": "R$35,90",
+    "categoria": "Casa",
+    "estoque": 96,
+    "imagem": "https://dataforge.com/images/cesto_dobravel.jpg"
+  },
+  {
+    "id": 39,
+    "nome": "Patinete Infantil com Luzes LED",
+    "descricao": "Estabilidade e segurança com três rodas. Diversão garantida com rodas que acendem.",
+    "preco": "R$169,00",
+    "categoria": "Brinquedos",
+    "estoque": 24,
+    "imagem": "https://dataforge.com/images/patinete_led.jpg"
+  },
+  {
+    "id": 40,
+    "nome": "Loção Hidratante Corporal 'Lavanda'",
+    "descricao": "Hidratação de 24 horas e perfume relaxante de lavanda. Pele macia e cheirosa.",
+    "preco": "R$49,99",
+    "categoria": "Beleza",
+    "estoque": 75,
+    "imagem": "https://dataforge.com/images/locao_lavanda.jpg"
+  },
+  {
+    "id": 41,
+    "nome": "Roteador Wi-Fi Mesh Tri-Band",
+    "descricao": "Cobertura total e velocidade máxima em sua casa. Diga adeus aos pontos cegos.",
+    "preco": "R$480,00",
+    "categoria": "Eletrônicos",
+    "estoque": 12,
+    "imagem": "https://dataforge.com/images/roteador_mesh.jpg"
+  },
+  {
+    "id": 42,
+    "nome": "Cachecol de Lã Pura 'Inverno'",
+    "descricao": "Extremamente quente e suave ao toque. O acessório perfeito para o frio intenso.",
+    "preco": "R$110,00",
+    "categoria": "Moda",
+    "estoque": 55,
+    "imagem": "https://dataforge.com/images/cachecol_inverno.jpg"
+  },
+  {
+    "id": 43,
+    "nome": "Jarra de Vidro com Infusor",
+    "descricao": "Prepare águas saborizadas ou chás gelados. Design elegante para a mesa.",
+    "preco": "R$62,90",
+    "categoria": "Casa",
+    "estoque": 83,
+    "imagem": "https://dataforge.com/images/jarra_infusor.jpg"
+  },
+  {
+    "id": 44,
+    "nome": "Kit de Ferramentas de Jardim Infantil",
+    "descricao": "Luvas, pá e ancinho em tamanho reduzido. Incentive o amor pela natureza.",
+    "preco": "R$39,90",
+    "categoria": "Brinquedos",
+    "estoque": 90,
+    "imagem": "https://dataforge.com/images/kit_jardim_infantil.jpg"
+  },
+  {
+    "id": 45,
+    "nome": "Creme para Pés Revitalizante",
+    "descricao": "Fórmula com menta e óleos essenciais. Alívio imediato para pés cansados.",
+    "preco": "R$19,50",
+    "categoria": "Beleza",
+    "estoque": 79,
+    "imagem": "https://dataforge.com/images/creme_pes.jpg"
+  },
+  {
+    "id": 46,
+    "nome": "Carregador Portátil Ultra Fino 10000mAh",
+    "descricao": "Leve 2 cargas completas para seu smartphone. Design elegante e compacto.",
+    "preco": "R$99,90",
+    "categoria": "Eletrônicos",
+    "estoque": 47,
+    "imagem": "https://dataforge.com/images/carregador_portatil.jpg"
+  },
+  {
+    "id": 47,
+    "nome": "Saia Midi Plissada 'Glamour'",
+    "descricao": "Tecido texturizado com caimento fluido. Perfeita para um look sofisticado e moderno.",
+    "preco": "R$165,00",
+    "categoria": "Moda",
+    "estoque": 37,
+    "imagem": "https://dataforge.com/images/saia_plissada.jpg"
+  },
+  {
+    "id": 48,
+    "nome": "Toalha de Banho Gigante Egípcia",
+    "descricao": "Algodão egípcio 100% de alta gramatura. Máximo de absorção e maciez.",
+    "preco": "R$85,99",
+    "categoria": "Casa",
+    "estoque": 58,
+    "imagem": "https://dataforge.com/images/toalha_egipcia.jpg"
+  },
+  {
+    "id": 49,
+    "nome": "Jogo de Tabuleiro 'Estratégia Total'",
+    "descricao": "Desafie seus amigos em um jogo tático e cheio de reviravoltas. Para 2 a 4 jogadores.",
+    "preco": "R$135,00",
+    "categoria": "Brinquedos",
+    "estoque": 20,
+    "imagem": "https://dataforge.com/images/jogo_estrategia.jpg"
+  },
+  {
+    "id": 50,
+    "nome": "Kit de Pincéis de Maquiagem Profissional (12 Pçs)",
+    "descricao": "Cerdas macias e sintéticas. Tudo o que você precisa para uma aplicação perfeita.",
+    "preco": "R$95,00",
+    "categoria": "Beleza",
+    "estoque": 64,
+    "imagem": "https://dataforge.com/images/pinceis_profissionais.jpg"
+  }
+];
+
+// Função para agrupar produtos por categoria
+function agruparProdutos(produtos) {
+  return produtos.reduce((acc, produto) => {
+    const categoria = produto.categoria;
+    if (!acc[categoria]) {
+      acc[categoria] = [];
+    }
+    acc[categoria].push(produto);
+    return acc;
+  }, {});
+}
+
+// Função para renderizar os produtos na página
+function renderizarProdutos(produtos) {
+  const container = document.getElementById('produtos-container');
+  const produtosAgrupados = agruparProdutos(produtos);
+  
+  // Limpa o conteúdo existente (se houver)
+  container.innerHTML = ''; 
+
+  for (const categoria in produtosAgrupados) {
+    const produtosHTML = produtosAgrupados[categoria].map(produto => {
+      // Ajusta o texto do link WhatsApp para ser seguro em URL
+      const whatsappTexto = encodeURIComponent(`Quero comprar o ${produto.nome} na promoção Leve 3, Pague 1`);
+      const whatsappLink = `https://wa.me/5521999999999?text=${whatsappTexto}`;
+
+      return `
+        <div class="produto">
+          <img src="${produto.imagem}" alt="${produto.nome}">
+          <h3>${produto.nome}</h3>
+          <p>${produto.descricao}</p>
+          <p class="preco">${produto.preco} (3x1)</p>
+          <a href="${whatsappLink}" class="btn" target="_blank">Comprar via WhatsApp</a>
+        </div>
+      `;
+    }).join('');
+
+    const categoriaSection = `
+      <section class="categoria">
+        <h2>${categoria}</h2>
+        <div class="produtos">
+          ${produtosHTML}
+        </div>
+      </section>
+    `;
+    
+    container.innerHTML += categoriaSection;
+  }
+}
+
+// Inicia a renderização dos produtos
+renderizarProdutos(produtosData);
+
+// Contador regressivo 24 horas
+function iniciarContador() {
+  // Define o fim da contagem para 24 horas a partir do carregamento
+  // Para fins de teste/demonstração, você pode usar um valor fixo no LocalStorage para persistir a contagem
+  let fimContagem = localStorage.getItem('fimContagem');
+  if (!fimContagem || new Date().getTime() > fimContagem) {
+    // Se não houver ou se o tempo já passou, define um novo período de 24h
+    fimContagem = new Date().getTime() + (24 * 60 * 60 * 1000); 
+    localStorage.setItem('fimContagem', fimContagem);
+  }
+  
+  const fim = parseInt(fimContagem);
+
+  const timer = setInterval(function() {
+    const agora = new Date().getTime();
+    const restante = fim - agora;
+    
+    const horas = Math.floor((restante % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutos = Math.floor((restante % (1000 * 60 * 60)) / (1000 * 60));
+    const segundos = Math.floor((restante % (1000 * 60)) / 1000);
+    
+    // Formatação para garantir dois dígitos (ex: 09h 05m 01s)
+    const formato = `${String(horas).padStart(2, '0')}h ${String(minutos).padStart(2, '0')}m ${String(segundos).padStart(2, '0')}s`;
+    
+    document.getElementById("contador").innerHTML = formato;
+    
+    if (restante < 0) {
+      clearInterval(timer);
+      document.getElementById("contador").innerHTML = "Oferta encerrada!";
+      localStorage.removeItem('fimContagem'); // Limpa para a próxima visita
+    }
+  }, 1000);
+}
+iniciarContador();
+</script>
+
+</body>
+</html>
